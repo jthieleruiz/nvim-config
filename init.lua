@@ -41,6 +41,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 local vim = vim
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.opt.foldenable = false
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -73,21 +74,23 @@ require('lazy').setup({
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
+  'nvim-tree/nvim-web-devicons',
 
- 'ThePrimeagen/vim-be-good',
- 'theprimeagen/harpoon',
- 'mbbill/undotree',
- 'numToStr/Comment.nvim',
-{
+  'ThePrimeagen/vim-be-good',
+  'theprimeagen/harpoon',
+  'mbbill/undotree',
+  'numToStr/Comment.nvim',
+  'mfussenegger/nvim-jdtls',
+  {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
     event = "VeryLazy",
     config = function()
-        require("nvim-surround").setup({
-            -- Configuration here, or leave empty to use defaults
-        })
+      require("nvim-surround").setup({
+        -- Configuration here, or leave empty to use defaults
+      })
     end
-},
+  },
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -101,7 +104,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -148,7 +151,13 @@ require('lazy').setup({
       end,
     },
   },
-
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    config = true
+    -- use opts = {} for passing setup options
+    -- this is equalent to setup({}) function
+  },
   {
     -- Theme inspired by Atom
     'rose-pine/neovim',
@@ -168,26 +177,35 @@ require('lazy').setup({
         theme = 'rose-pine',
         component_separators = '|',
         section_separators = '',
+        show_filename_only = false,
+        path = 1,
+        shorting_target = 50,
       },
     },
   },
 
+  -- Add indentation guides even on blank lines
   {
-    -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
     opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
+      -- Your configuration options here
     },
+    config = function()
+      require("indent_blankline").setup {
+        -- Your setup configuration here
+      }
+    end,
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',         opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
+  {
+    "nvim-telescope/telescope-file-browser.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+  },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
@@ -234,23 +252,22 @@ local M = {}
 -- function to create a list of commands and convert them to autocommands
 -------- This function is taken from https://github.com/norcalli/nvim_utils
 function M.nvim_create_augroups(definitions)
-    for group_name, definition in pairs(definitions) do
-        api.nvim_command('augroup '..group_name)
-        api.nvim_command('autocmd!')
-        for _, def in ipairs(definition) do
-            local command = table.concat(vim.tbl_flatten{'autocmd', def}, ' ')
-            api.nvim_command(command)
-        end
-        api.nvim_command('augroup END')
+  for group_name, definition in pairs(definitions) do
+    api.nvim_command('augroup ' .. group_name)
+    api.nvim_command('autocmd!')
+    for _, def in ipairs(definition) do
+      local command = table.concat(vim.tbl_flatten { 'autocmd', def }, ' ')
+      api.nvim_command(command)
     end
+    api.nvim_command('augroup END')
+  end
 end
 
-
 local autoCommands = {
-    -- other autocommands
-    open_folds = {
-        {"BufReadPost,FileReadPost", "*", "normal zR"}
-    }
+  -- other autocommands
+  -- open_folds = {
+  --   { "BufReadPost,FileReadPost", "*", "normal zR" }
+  -- }
 }
 
 M.nvim_create_augroups(autoCommands)
@@ -321,8 +338,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
-  sorting_strategy="ascending",
-  path_display={"smart"},
+    sorting_strategy = "ascending",
+    path_display = { "smart" },
     mappings = {
       i = {
         ['<C-u>'] = false,

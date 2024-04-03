@@ -6,3 +6,19 @@ vim.keymap.set('n', '<leader>ps', function()
 end, {desc = "Grep"})
 
 vim.keymap.set('n', '<leader>tk', ':Telescope keymaps')
+vim.keymap.set('n', '<leader>fa', function()
+	require("telescope").extensions.file_browser.file_browser()
+end)
+
+require("telescope").setup {
+  defaults = {
+    theme = "center",
+    sorting_strategy = "ascending",
+    layout_config = {
+      horizontal = {
+        prompt_position = "top",
+        preview_width = 0.3,
+      },
+    },
+  },
+}
