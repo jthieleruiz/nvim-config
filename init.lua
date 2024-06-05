@@ -81,6 +81,8 @@ require('lazy').setup({
   'mbbill/undotree',
   'numToStr/Comment.nvim',
   'mfussenegger/nvim-jdtls',
+  'f-person/git-blame.nvim',
+  "Olical/conjure",
   {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
@@ -110,7 +112,16 @@ require('lazy').setup({
       'folke/neodev.nvim',
     },
   },
-
+  -- Clojure REPL
+  {
+    'liquidz/vim-iced',
+    dependencies = {
+      'guns/vim-sexp',
+      'tpope/vim-sexp-mappings-for-regular-people',
+      'https://gitlab.com/HiPhish/rainbow-delimiters.nvim',
+    }
+  },
+  {'luochen1990/rainbow'},
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -131,8 +142,11 @@ require('lazy').setup({
   { 'folke/which-key.nvim', opts = {} },
 
   -- Used to close parens
-  { 'windwp/nvim-autopairs' },
-  {
+  { 'windwp/nvim-autopairs',
+    opts = {
+      enable_check_bracket_line = false
+    }},
+    {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -374,20 +388,27 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'markdown', 'bash', 'html', 'css', 'fennel', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
+  -- incremental_selection = {
+  --   enable = true,
+  --   keymaps = {
+  --     init_selection = '<c-space>',
+  --     node_incremental = '<c-space>',
+  --     scope_incremental = '<c-s>',
+  --     node_decremental = '<M-space>',
+  --   },
+  -- },
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = '<c-space>',
-      node_incremental = '<c-space>',
-      scope_incremental = '<c-s>',
-      node_decremental = '<M-space>',
+      node_incremental = "v",
+      node_decremental = "V",
     },
   },
   textobjects = {
@@ -509,6 +530,11 @@ local servers = {
 
 -- Setup neovim lua configuration
 require('neodev').setup()
+
+require('gitblame').setup {
+     --Note how the `gitblame_` prefix is omitted in `setup`
+    enabled = true,
+}
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
