@@ -146,7 +146,7 @@ require('lazy').setup({
     opts = {
       enable_check_bracket_line = false
     }},
-    {
+  {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -181,16 +181,45 @@ require('lazy').setup({
     end,
   },
 
+  {"rebelot/kanagawa.nvim",
+  name = "kanagawa"},
+
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+  },
+
+  {
+    "olimorris/onedarkpro.nvim",
+    priority = 1000, -- Ensure it loads first
+  },
+
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    name = "neo-tree",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
+      -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    }
+  },
+
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
-        theme = 'rose-pine',
-        component_separators = '|',
-        section_separators = '',
+        icons_enabled = true,
+        theme = 'tokyonight',
+        -- component_separators = '|',
+        -- section_separators = '',
         show_filename_only = false,
         path = 1,
         shorting_target = 50,
@@ -199,16 +228,14 @@ require('lazy').setup({
   },
 
   -- Add indentation guides even on blank lines
-  {
-    'lukas-reineke/indent-blankline.nvim',
+    {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     opts = {
-      -- Your configuration options here
+      indent = {
+        char = {"│"},
+      }, enabled = true,
     },
-    config = function()
-      require("indent_blankline").setup {
-        -- Your setup configuration here
-      }
-    end,
   },
 
   -- "gc" to comment visual regions/lines
@@ -362,6 +389,23 @@ require('telescope').setup {
     },
   },
 }
+require("neo-tree").setup({
+  close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
+  popup_border_style = "rounded",
+  window = {
+    mappings = {
+      ["-"] = "navigate_up",
+      ["P"] = { "toggle_preview", config = { use_float = true, use_image_nvim = true } },
+      ["l"] = "open",
+      ["Z"] = "expand_all_nodes",
+
+    }}
+})
+-- require('kanagawa').setup ({
+--   theme = "lotus",
+--   transparent = true,
+--   -- compile = true,
+-- })
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
