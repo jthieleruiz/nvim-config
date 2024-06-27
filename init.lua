@@ -182,7 +182,7 @@ require('lazy').setup({
   },
 
   {"rebelot/kanagawa.nvim",
-  name = "kanagawa"},
+    name = "kanagawa"},
 
   {
     "folke/tokyonight.nvim",
@@ -207,7 +207,8 @@ require('lazy').setup({
       "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
       "MunifTanjim/nui.nvim",
       -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
-    }
+
+    },
   },
 
   {
@@ -228,7 +229,7 @@ require('lazy').setup({
   },
 
   -- Add indentation guides even on blank lines
-    {
+  {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
     opts = {
@@ -392,13 +393,26 @@ require('telescope').setup {
 require("neo-tree").setup({
   close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
   popup_border_style = "rounded",
+  filesystem = {
+    filtered_items = {
+      -- visible = true,
+      show_hidden_count = true,
+      hide_dotfiles = false,
+      hide_gitignored = false,
+      hide_by_name = {
+        '.git',
+        '.DS_Store',
+        'thumbs.db',
+      },
+      never_show = {},
+    }
+  },
   window = {
     mappings = {
       ["-"] = "navigate_up",
       ["P"] = { "toggle_preview", config = { use_float = true, use_image_nvim = true } },
       ["l"] = "open",
       ["Z"] = "expand_all_nodes",
-
     }}
 })
 -- require('kanagawa').setup ({
@@ -576,8 +590,8 @@ local servers = {
 require('neodev').setup()
 
 require('gitblame').setup {
-     --Note how the `gitblame_` prefix is omitted in `setup`
-    enabled = true,
+  --Note how the `gitblame_` prefix is omitted in `setup`
+  enabled = true,
 }
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
