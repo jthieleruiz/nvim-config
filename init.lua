@@ -146,6 +146,26 @@ require('lazy').setup({
     opts = {
       enable_check_bracket_line = false
     }},
+  -- nvim v0.8.0
+  {
+    "kdheepak/lazygit.nvim",
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+    }
+  },
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -210,6 +230,8 @@ require('lazy').setup({
 
     },
   },
+
+  {'akinsho/toggleterm.nvim', version = "*", config = true},
 
   {
     -- Set lualine as statusline
@@ -381,6 +403,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('telescope').setup {
   defaults = {
     sorting_strategy = "ascending",
+    layout_config = { height = 0.95 },
     path_display = { "smart" },
     mappings = {
       i = {
@@ -390,6 +413,12 @@ require('telescope').setup {
     },
   },
 }
+
+require("toggleterm").setup{
+    open_mapping = [[<c-\>]], -- or { [[<c-\>]], [[<c-¥>]] } if you also use a Japanese keyboard.
+  direction = "float",
+}
+
 require("neo-tree").setup({
   close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
   popup_border_style = "rounded",
@@ -405,7 +434,12 @@ require("neo-tree").setup({
         'thumbs.db',
       },
       never_show = {},
-    }
+    },
+    follow_current_file = {
+      enabled = true,
+      leave_dirs_open = false,
+    },
+    buffers = { follow_current_file = { enable = true } },
   },
   window = {
     mappings = {
