@@ -82,7 +82,7 @@ require('lazy').setup({
   'numToStr/Comment.nvim',
   'mfussenegger/nvim-jdtls',
   'f-person/git-blame.nvim',
-  "Olical/conjure",
+  'Olical/conjure',
   {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
@@ -140,6 +140,7 @@ require('lazy').setup({
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
+  { 'folke/todo-comments.nvim', dependencies = {'nvim-lua/plenary.nvim'}, opts = {signs = false} },
 
   -- Used to close parens
   { 'windwp/nvim-autopairs',
@@ -230,7 +231,10 @@ require('lazy').setup({
 
     },
   },
-
+  {
+    "luukvbaal/nnn.nvim",
+    config = function() require("nnn").setup() end
+  },
   {'akinsho/toggleterm.nvim', version = "*", config = true},
 
   {
@@ -270,6 +274,12 @@ require('lazy').setup({
     "nvim-telescope/telescope-file-browser.nvim",
     dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
   },
+  -- {
+  --   "nvim-telescope/telescope-ui-select.nvim",
+  --   dependencies = { "nvim-telescope/telescope.nvim" },
+  --   config = function () 
+  --     require()
+  -- },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
@@ -292,7 +302,20 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
+  {
+    'FabijanZulj/blame.nvim',
+    config = function()
+      require("blame").setup({
+        date_format = "%m.%d.%Y",
+        colors = {'#082B49', '#0E4B81', '#3B7AE8', '#7FA9F0', '#92A2F2', '#CACAF6', '#DCDCF9', '#0FBDA6', '#5FF2DE'},
+        -- https://coolors.co/5ff2de-0fbda6-dcdcf9-cacaf6-92a2f2-7fa9f0-3b7ae8-0e4b81-082b49
+      })
+    end
+  },
 
+  {
+    'norcalli/nvim-colorizer.lua',
+  },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -308,6 +331,7 @@ require('lazy').setup({
 }, {})
 
 local opt = vim.opt
+local builtin = require('telescope.builtin');
 opt.foldmethod = "expr"
 opt.foldexpr = "nvim_treesitter#foldexpr()"
 
@@ -340,7 +364,7 @@ M.nvim_create_augroups(autoCommands)
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 -- Make line numbers default
 vim.wo.number = true
@@ -412,6 +436,11 @@ require('telescope').setup {
       },
     },
   },
+  extensions = {
+    fzf = {
+      fuzzy = true,
+    }
+  }
 }
 
 require("toggleterm").setup{
@@ -449,6 +478,14 @@ require("neo-tree").setup({
       ["Z"] = "expand_all_nodes",
     }}
 })
+
+require('neo-tree.command').execute({
+  action = "close",          -- OPTIONAL, this is the default value
+  -- source = "filesystem",     -- OPTIONAL, this is the default value
+  -- position = "left",         -- OPTIONAL, this is the default value
+  -- reveal_file = reveal_file, -- path to file or folder to reveal
+  -- reveal_force_cwd = true,   -- change cwd without asking if needed
+})
 -- require('kanagawa').setup ({
 --   theme = "lotus",
 --   transparent = true,
@@ -459,6 +496,10 @@ require("neo-tree").setup({
 pcall(require('telescope').load_extension, 'fzf')
 
 -- See `:help telescope.builtin`
+vim.keymap.set('n', '<leader>sn', function ()
+  require('telescope.builtin').find_files {cwd = vim.fn.stdpath 'config' }
+end, { desc = '[S]earch [N]eovim files' })
+
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
@@ -572,6 +613,7 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
+  nmap ('<leader>lg', '<Nop>')
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 

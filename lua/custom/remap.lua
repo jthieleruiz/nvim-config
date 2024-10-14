@@ -1,5 +1,6 @@
 
 vim.g.mapleader = " "
+-- vim.keymap.del("n", "<leader>lg")
 vim.keymap.set("n", "<leader>pb", vim.cmd.Ex, {desc = "[B]ack to files"})
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -46,3 +47,8 @@ end)
 vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
 ;
+vim.keymap.set("n", "<leader>jq", ":%!jq .<CR>");
+vim.keymap.set("n", "<leader>ww", ":set wrap!<CR>");
+
+      -- { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+
