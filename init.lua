@@ -313,6 +313,13 @@ require('lazy').setup({
     end
   },
 
+
+  {
+    'kevinhwang91/nvim-ufo', dependencies = {
+      'kevinhwang91/promise-async',
+    }
+  },
+
   {
     'norcalli/nvim-colorizer.lua',
   },
@@ -332,8 +339,8 @@ require('lazy').setup({
 
 local opt = vim.opt
 local builtin = require('telescope.builtin');
-opt.foldmethod = "expr"
-opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- opt.foldmethod = "expr"
+-- opt.foldexpr = "nvim_treesitter#foldexpr()"
 
 local api = vim.api
 local M = {}
@@ -428,7 +435,7 @@ require('telescope').setup {
   defaults = {
     sorting_strategy = "ascending",
     layout_config = { height = 0.95 },
-    path_display = { "smart" },
+    path_display = { "truncate" },
     mappings = {
       i = {
         ['<C-u>'] = false,
@@ -447,6 +454,8 @@ require("toggleterm").setup{
     open_mapping = [[<c-\>]], -- or { [[<c-\>]], [[<c-¥>]] } if you also use a Japanese keyboard.
   direction = "float",
 }
+
+require("ufo").setup()
 
 require("neo-tree").setup({
   close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
@@ -626,7 +635,7 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  -- nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
