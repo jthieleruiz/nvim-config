@@ -64,7 +64,7 @@ local config = {
 	settings = {
 		java = {
 			-- TODO Replace this with the absolute path to your main java version (JDK 17 or higher)
-			home = "/Library/Java/JavaVirtualMachines/jdk-23.0.1.jdk/Contents/Home",
+			home = "/Users/jtruiz/.sdkman/candidates/java/22.0.1-open",
 			eclipse = {
 				downloadSources = true,
 			},
@@ -81,6 +81,10 @@ local config = {
 						name = "JavaSE-23",
 						path = "/Library/Java/JavaVirtualMachines/jdk-23.0.1.jdk/Contents/Home",
 					},
+					{
+						name = "SDKMAN-21.0.1",
+						path = "/Users/jtruiz/.sdkman/candidates/java/22.0.1-open",
+					}
 					-- {
 					-- 	name = "JavaSE-19",
 					-- 	path = "/usr/lib/jvm/java-19-openjdk-amd64",

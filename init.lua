@@ -42,6 +42,7 @@ local vim = vim
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.opt.foldenable = false
+vim.g["conjure#client#python#stdio#auto_echo_result"] = true
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -98,6 +99,9 @@ require('lazy').setup({
     'nvimdev/lspsaga.nvim',
     config = function()
       require('lspsaga').setup({
+        lightbulb = {
+          enable = false,  -- Disable the lightbulb
+        },
         definition = {
         }
       })
@@ -293,7 +297,7 @@ require('lazy').setup({
     opts = {
       indent = {
         char = {"│"},
-      }, enabled = true,
+      }, enabled = false,
     },
   },
 
